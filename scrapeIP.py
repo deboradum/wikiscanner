@@ -17,45 +17,52 @@ PARAMS = {
         "rvlimit": 500,
         "format": "json"
     }
-TOTAL = 0
 
-# Gets all revisions made by
-def get_revs(revs:list, rvcont:str=""):
-    ses = requests.Session()
-    if rvcont != "":
-        new_params = PARAMS.copy()
-        new_params["rvcontinue"] = rvcont
-    else:
-        new_params = PARAMS.copy()
 
-    # Gets json encoded content of response of the get request.
-    data = ses.get(url=URL, params=new_params).json()
+class PageRevs:
+    def __init__(self):
+        self.revs = []
+        self.total = 0
+        self.ses = requests.Session()
 
-    # Gets page ID
-    page_id = list(data["query"]["pages"].keys())[0]
+    # Gets all revisions made by
+    def get_revs(self, rvcont:str=""):
+        if rvcont != "":
+            new_params = PARAMS.copy()
+            new_params["rvcontinue"] = rvcont
+        else:
+            new_params = PARAMS.copy()
 
-    # gets all revisions made by an annonymous user.
-    revisions = data["query"]["pages"][page_id]["revisions"]
-    for rev in revisions:
-        matchipv4 = re.search(IPV4REGEX, rev["user"])
-        matchipv6 = re.search(IPV6REGEX, rev["user"])
-        if matchipv4 or matchipv6:
-            if rev not in revs:
-                revs.append(rev)
+        # Gets json encoded content of response of the get request.
+        data = self.ses.get(url=URL, params=new_params).json()
 
-     # Gets continue value
-    rvcontnew = data["continue"]["rvcontinue"]
-    if rvcontnew != "":
-        try:
-            get_revs(revs, rvcont=rvcontnew)
-        except Exception:
-            pass
+        # Gets page ID
+        page_id = list(data["query"]["pages"].keys())[0]
+
+        # gets all revisions made by an annonymous user.
+        revisions = data["query"]["pages"][page_id]["revisions"]
+        for rev in revisions:
+            self.total += 1
+            matchipv4 = re.search(IPV4REGEX, rev["user"])
+            matchipv6 = re.search(IPV6REGEX, rev["user"])
+            if matchipv4 or matchipv6:
+                if rev not in self.revs:
+                    self.revs.append(rev)
+
+        # Gets continue value
+        rvcontnew = data["continue"]["rvcontinue"]
+        if rvcontnew != "":
+            try:
+                self.get_revs(rvcont=rvcontnew)
+            except Exception:
+                pass
 
 
 def main():
-    revs = []
-
-    get_revs(revs)
+    p = PageRevs()
+    p.get_revs()
+    print(p.total)
+    print(len(p.revs))
 
 
 if __name__ == "__main__":
