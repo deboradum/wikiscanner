@@ -25,16 +25,16 @@ class PageRevs:
         self.anon_revs = []
         self.total_revs = 0
         self.ses = requests.Session()
-        self.title = "TMP"  # TODO title fix
-        self.page_id = self.get_page_id()
+        self.title = "2020 Nagorno-Karabakh war"  # TODO title fix
         self.params = {
             "action": "query",
             "prop": "revisions",
-            "titles": "2020 Nagorno-Karabakh war",
+            "titles": self.title,
             "rvlimit": 500,
             "rvprop": "ids|flags|timestamp|user|userid|size|comment|tags",
             "format": "json"
         }
+        self.page_id = self.get_page_id()
 
     # Gets all revisions made by
     def get_revs(self, rvcont:str=""):
@@ -73,7 +73,7 @@ class PageRevs:
         id_params = {
             "action": "query",
             "prop": "info",
-            "titles": "2020 Nagorno-Karabakh war",  # TODO title fix
+            "titles": self.title,  # TODO title fix
             "format": "json"
         }
         data = self.ses.get(url=URL, params=id_params).json()
@@ -87,7 +87,7 @@ def main():
     p.get_revs()
 
     # print(p.total_revs)
-    # print(len(p.anon_revs))
+    print(len(p.anon_revs))
     print(p.anon_revs[0])
     print(p.anon_revs[1])
     print(p.anon_revs[2])
