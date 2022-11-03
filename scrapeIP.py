@@ -1,3 +1,4 @@
+import json
 import requests
 import sys
 import re
@@ -17,8 +18,8 @@ import re
 
 IPV4REGEX = '^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$'
 IPV6REGEX = '(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))'
-URL = "https://en.wikipedia.org/w/api.php"
-
+WIKI_API_URL = "https://en.wikipedia.org/w/api.php"
+IP_API_URL = "http://ip-api.com/batch?fields=status,message,continent,continentCode,country,countryCode,region,regionName,city,district,zip,lat,lon,isp,org,as,proxy,query"
 
 class PageRevs:
     def __init__(self):
@@ -36,7 +37,7 @@ class PageRevs:
         }
         self.page_id = self.get_page_id()
 
-    # Gets all revisions made by
+    # Gets all revisions made by annonymous users.
     def get_revs(self, rvcont:str=""):
         # Adds continue value to params if needed.
         if rvcont != "":
@@ -46,7 +47,7 @@ class PageRevs:
             new_params = self.params.copy()
 
         # Gets json encoded content of response of the get request.
-        data = self.ses.get(url=URL, params=new_params).json()
+        data = self.ses.get(url=WIKI_API_URL, params=new_params).json()
 
         # gets all revisions made by an annonymous user.
         revisions = data["query"]["pages"][self.page_id]["revisions"]
@@ -69,6 +70,7 @@ class PageRevs:
 
         return
 
+    # Gets page ID.
     def get_page_id(self):
         id_params = {
             "action": "query",
@@ -76,24 +78,42 @@ class PageRevs:
             "titles": self.title,  # TODO title fix
             "format": "json"
         }
-        data = self.ses.get(url=URL, params=id_params).json()
+        data = self.ses.get(url=WIKI_API_URL, params=id_params).json()
         id = list(data["query"]["pages"].keys())[0]
 
         return id
+
+    # Returns a list of the IP addresses that made revisions.
+    def get_ips(self):
+        ips = {dict["user"] for dict in self.anon_revs}
+
+        return list(ips)
+
+
+
+# Returns a dictionary containg information about the IP address.
+def get_ip_info(ips):
+    s = requests.Session()
+
+    data = s.get(url=IP_API_URL, data=json.dumps(ips))
+    print(data)
+
+    return
 
 
 def main():
     p = PageRevs()
     p.get_revs()
+    get_ip_info(p.get_ips())
 
     # print(p.total_revs)
-    print(len(p.anon_revs))
-    print(p.anon_revs[0])
-    print(p.anon_revs[1])
-    print(p.anon_revs[2])
-    print(p.anon_revs[3])
-    print(p.anon_revs[4])
-    print(p.anon_revs[5])
+    # print(len(p.anon_revs))
+    # print(p.anon_revs[0])
+    # print(p.anon_revs[1])
+    # print(p.anon_revs[2])
+    # print(p.anon_revs[3])
+    # print(p.anon_revs[4])
+    # print(p.anon_revs[5])
 
 
 if __name__ == "__main__":
