@@ -3,17 +3,15 @@ import requests
 import sys
 import re
 
+import getIPInfo
+
 # TODO
 # data visualiseren met hoeveel procent van welke landen etc.
 # % of revisions annonymous
 # Only include revisions made by IPs in API query
 # >249 calls b2b error/ crash afhandelen
 # parse monthly wikipedia datadumps
-# IPINFO database
-# EDIT database
-# TAGSPEREDIT database
 # Snellere versie in C#, C++ OID schrijven
-# databse op rasppi hosten en daarnaar uploaden
 # Andere talen ondersteunend
 
 IPV4REGEX = '^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$'
@@ -89,31 +87,14 @@ class PageRevs:
         return list(ips)
 
 
-
-# Returns a dictionary containg information about the IP address.
-def get_ip_info(ips):
-    s = requests.Session()
-
-    for ip in ips:
-        data = s.get(url=f"https://ipapi.co/{ip}/json/").json()
-        print(data)
-
-    return
-
-
 def main():
     p = PageRevs()
-    p.get_revs()
-    get_ip_info(p.get_ips())
 
-    # print(p.total_revs)
-    # print(len(p.anon_revs))
+    p.get_revs()
     # print(p.anon_revs[0])
-    # print(p.anon_revs[1])
-    # print(p.anon_revs[2])
-    # print(p.anon_revs[3])
-    # print(p.anon_revs[4])
-    # print(p.anon_revs[5])
+    # print("")
+    ips_info = getIPInfo.get_ip_info(p.get_ips())
+    # print(ips_info[0])
 
 
 if __name__ == "__main__":
