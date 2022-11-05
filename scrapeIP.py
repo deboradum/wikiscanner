@@ -1,9 +1,8 @@
-import json
 import requests
-import sys
 import re
-
+from dotenv import load_dotenv
 import getIPInfo
+from databaseHandler import Database
 
 # TODO
 # data visualiseren met hoeveel procent van welke landen etc.
@@ -88,12 +87,19 @@ class PageRevs:
 
 
 def main():
-    p = PageRevs()
 
-    p.get_revs()
+
+    db = Database()
+    print(db)
+    db.get_version()
+
+
+    # p = PageRevs()
+
+    # p.get_revs()
     # print(p.anon_revs[0])
     # print("")
-    ips_info = getIPInfo.get_ip_info(p.get_ips())
+    # ips_info = getIPInfo.get_ip_info(p.get_ips())
     # print(ips_info[0])
 
 
