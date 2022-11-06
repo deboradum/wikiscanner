@@ -3,15 +3,6 @@ import scrapeIP
 import getIPInfo
 import argparse
 
-# TODO
-# data visualiseren met hoeveel procent van welke landen etc.
-# % of revisions annonymous
-# Only include revisions made by IPs in API query
-# >249 calls b2b error/ crash afhandelen
-# parse monthly wikipedia datadumps
-# Andere talen ondersteunend
-# IPAPI error handling
-
 def main(title=None, id=None):
     wiki_handler = scrapeIP.WikiAPIHandler(title=title, id=id)
     wiki_handler.get_revs()
