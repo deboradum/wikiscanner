@@ -4,7 +4,9 @@ import psycopg2
 
 class Database:
     def __init__(self):
+        # Loads environment variables from .env file.
         load_dotenv()
+        # Connects to database.
         try:
             self.conn = psycopg2.connect(
                 host=os.environ.get("HOST"),
@@ -15,19 +17,15 @@ class Database:
         except Exception as e:
             print("Error connecting to database: ", e)
 
+    # Closes connection to the database.
     def destroy(self):
         self.conn.close()
 
-    def get_version(self):
-        cursor = self.conn.cursor()
-        cursor.execute('SELECT version()')
-        data = cursor.fetchone()
-        print("Connection established to: ",data)
-        cursor.close()
-
+    # Inserts tags information in the tags table in the database.
     def insert_tags(self, revs):
         cursor = self.conn.cursor()
         rows = []
+        # Creates tuples that will be inserted in the database.
         for rev in revs:
             rev_id = rev.get("revid")
             tags = rev.get("tags")
@@ -35,17 +33,22 @@ class Database:
                 row = (rev_id, tag)
                 rows.append(row)
         records_list = ','.join(['%s'] * len(rows))
+        # Creates query to insert all entries in the database.
         query = "INSERT INTO tags VALUES {} ON CONFLICT DO NOTHING".format(records_list)
+        # Executes query.
         try:
             cursor.execute(query, rows)
         except Exception as e:
             print("Error inserting: ", e)
+        # Commits insertion.
         self.conn.commit()
         cursor.close()
 
+    # Inserts revision information in the revision table in the database.
     def insert_revision(self, revs):
         cursor = self.conn.cursor()
         rows = []
+        # Creates tuples that will be inserted in the database.
         for rev in revs:
             rev_id = rev.get("revid")
             parent_id = rev.get("parentid")
@@ -57,20 +60,24 @@ class Database:
             row = (rev_id, parent_id, ip_addr, time, comment, page_title, page_id)
             rows.append(row)
         records_list = ','.join(['%s'] * len(rows))
+        # Creates query to insert all entries in the database.
         query = "INSERT INTO revision VALUES {} ON CONFLICT DO NOTHING".format(records_list)
-
+        # Executes query.
         try:
             cursor.execute(query, rows)
         except Exception as e:
             print("Error inserting: ", e)
+        # Commits insertion.
         self.conn.commit()
         cursor.close()
 
         self.insert_tags(revs)
 
+    # Inserts IP information in the ip_info table in the database.
     def insert_ip(self, ips_info):
         cursor = self.conn.cursor()
         rows = []
+        # Creates tuples that will be inserted in the database.
         for ip in ips_info:
             ip_addr = ip.get("ip")
             network = ip.get("network")
@@ -85,10 +92,11 @@ class Database:
             rows.append(row)
         records_list = ','.join(['%s'] * len(rows))
         query = "INSERT INTO ip_info VALUES {} ON CONFLICT DO NOTHING".format(records_list)
-
+        # Executes query.
         try:
             cursor.execute(query, rows)
         except Exception as e:
             print("Error inserting: ", e)
+        # Commits insertion.
         self.conn.commit()
         cursor.close()
