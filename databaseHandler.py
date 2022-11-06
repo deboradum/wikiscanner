@@ -82,7 +82,7 @@ class Database:
         for ip in ips_info:
             ip_addr = ip.get("ip")
             network = ip.get("network")
-            country = ip.get("country")
+            country = ip.get("country_name")
             region = ip.get("region")
             city = ip.get("city")
             latitude = ip.get("latitude")
