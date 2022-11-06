@@ -1,14 +1,11 @@
 import requests
 import re
-from dotenv import load_dotenv
-import getIPInfo
-from databaseHandler import Database
 
 IPV4REGEX = '^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$'
 IPV6REGEX = '(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))'
 WIKI_API_URL = "https://en.wikipedia.org/w/api.php"
 
-class PageRevs:
+class WikiAPIHandler:
     def __init__(self):
         self.anon_revs = []
         self.total_revs = 0
@@ -42,6 +39,7 @@ class PageRevs:
             self.total_revs += 1
             matchipv4 = re.search(IPV4REGEX, rev["user"])
             matchipv6 = re.search(IPV6REGEX, rev["user"])
+            # Adds revision to anon_revs.
             if matchipv4 or matchipv6:
                 if rev not in self.anon_revs:
                     rev["page_id"] = self.page_id

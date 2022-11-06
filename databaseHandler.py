@@ -71,6 +71,7 @@ class Database:
         self.conn.commit()
         cursor.close()
 
+        # Adds tags to database.
         self.insert_tags(revs)
 
     # Inserts IP information in the ip_info table in the database.

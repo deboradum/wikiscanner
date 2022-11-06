@@ -14,18 +14,17 @@ import getIPInfo
 # custom title fixen!
 
 def main():
-
-    p = scrapeIP.PageRevs()
-    p.get_revs()
+    wiki_handler = scrapeIP.WikiAPIHandler()
+    wiki_handler.get_revs()
 
     db = databaseHandler.Database()
-    ips_info = getIPInfo.get_ips_info(p.get_ips())
-    # db.insert_ip(ips_info)
-
-    db.insert_revision(p.anon_revs)
-
+    # Inserts ip infos to database.
+    ips_info = getIPInfo.get_ips_info(wiki_handler.get_ips())
+    db.insert_ip(ips_info)
+    # Inserts revisions to database.
+    db.insert_revision(wiki_handler.anon_revs)
+    # Closes connection to database.
     db.destroy()
-
 
 
 if __name__ == "__main__":
