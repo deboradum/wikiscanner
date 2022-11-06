@@ -9,10 +9,8 @@ import argparse
 # Only include revisions made by IPs in API query
 # >249 calls b2b error/ crash afhandelen
 # parse monthly wikipedia datadumps
-# Snellere versie in C#, C++ OID schrijven
 # Andere talen ondersteunend
 # IPAPI error handling
-# custom title fixen!
 
 def main(title=None, id=None):
     wiki_handler = scrapeIP.WikiAPIHandler(title=title, id=id)

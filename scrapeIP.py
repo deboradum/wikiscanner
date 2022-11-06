@@ -74,8 +74,8 @@ class WikiAPIHandler:
             "format": "json"
         }
         data = self.ses.get(url=WIKI_API_URL, params=id_params).json()
-        id = int(list(data["query"]["pages"].keys())[0])
-        print(id)
+        id = list(data["query"]["pages"].keys())[0]
+        # If title is incorrect or not found by API, id will be '-1'.
         if id == '-1':
             print("Error looking up page by title. Check the page title or try again using the page ID.")
             return None
@@ -104,4 +104,3 @@ class WikiAPIHandler:
         ips = {dict["user"] for dict in self.anon_revs}
 
         return list(ips)
-
