@@ -1,5 +1,4 @@
 *.json
-*.txt
 *.env
 __pycache__
 TODO

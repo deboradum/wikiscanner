@@ -11,4 +11,6 @@ The information about IPs is collected using ipapi (https://ipapi.co/). This API
 
 The IP shown at a revision gives information about what network the edit came from. An edit that came from a specific organization does not automatically mean that the organization made the edit. It merely means that the revision came from a device connected to the organization's network.
 
+The tables needed for the database can be found in createDB.txt.
+
 This project was inspired by Virgil Griffith's WikiScanner (https://en.wikipedia.org/wiki/WikiScanner).

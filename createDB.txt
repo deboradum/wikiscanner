@@ -1,0 +1,34 @@
+CREATE TABLE IP_info
+(
+    ip varchar,
+    network varchar,
+    country varchar,
+    region varchar,
+    city varchar,
+    latitude float,
+    longitude float,
+    asn varchar,
+    organization varchar,
+    PRIMARY KEY (ip)
+);
+
+CREATE TABLE Revision
+(
+    rev_id bigint,
+    parent_id bigint,
+    ip varchar NOT NULL,
+    time timestamp,
+    comment varchar,
+    page_title varchar NOT NULL,
+    page_id bigint NOT NULL,
+    PRIMARY KEY (rev_id),
+    FOREIGN KEY (ip) REFERENCES IP_info(ip)
+);
+
+CREATE TABLE Tags
+(
+    rev_id bigint,
+    tag varchar,
+    PRIMARY KEY (rev_id,tag),
+    FOREIGN KEY (rev_id) REFERENCES Revision(rev_id)
+);
