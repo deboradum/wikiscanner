@@ -6,11 +6,20 @@ IPV6REGEX = '(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:
 WIKI_API_URL = "https://en.wikipedia.org/w/api.php"
 
 class WikiAPIHandler:
-    def __init__(self):
+    def __init__(self, title=None, id=None):
         self.anon_revs = []
         self.total_revs = 0
         self.ses = requests.Session()
-        self.title = "2020 Nagorno-Karabakh war"  # TODO title fix
+        if title is not None:
+            self.title = title
+            self.page_id = self.get_page_id()
+            if self.page_id is None:
+                exit(1)
+        else:
+            self.page_id = id
+            self.title = self.get_title()
+            if self.title is None:
+                exit(1)
         self.params = {
             "action": "query",
             "prop": "revisions",
@@ -19,7 +28,6 @@ class WikiAPIHandler:
             "rvprop": "ids|flags|timestamp|user|userid|size|comment|tags",
             "format": "json"
         }
-        self.page_id = self.get_page_id()
 
     # Gets all revisions made by annonymous users.
     def get_revs(self, rvcont:str=""):
@@ -57,18 +65,39 @@ class WikiAPIHandler:
 
         return
 
-    # Gets page ID.
+    # Gets page ID from page title.
     def get_page_id(self):
         id_params = {
             "action": "query",
             "prop": "info",
-            "titles": self.title,  # TODO title fix
+            "titles": self.title,
             "format": "json"
         }
         data = self.ses.get(url=WIKI_API_URL, params=id_params).json()
-        id = list(data["query"]["pages"].keys())[0]
+        id = int(list(data["query"]["pages"].keys())[0])
+        print(id)
+        if id == '-1':
+            print("Error looking up page by title. Check the page title or try again using the page ID.")
+            return None
 
         return id
+
+    # Gets title of a page from the page ID.
+    def get_title(self):
+        title_params = {
+            "action": "query",
+            "prop": "info",
+            "pageids": self.page_id,
+            "format": "json"
+        }
+        data = self.ses.get(url=WIKI_API_URL, params=title_params).json()
+        try:
+            title = data["query"]["pages"][self.page_id]["title"]
+        except Exception:
+            print("Error looking up page by ID. Check the page ID or try again using the page title.")
+            return None
+
+        return title
 
     # Returns a list of the IP addresses that made revisions.
     def get_ips(self):

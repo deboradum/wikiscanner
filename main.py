@@ -1,6 +1,7 @@
 import databaseHandler
 import scrapeIP
 import getIPInfo
+import argparse
 
 # TODO
 # data visualiseren met hoeveel procent van welke landen etc.
@@ -13,8 +14,8 @@ import getIPInfo
 # IPAPI error handling
 # custom title fixen!
 
-def main():
-    wiki_handler = scrapeIP.WikiAPIHandler()
+def main(title=None, id=None):
+    wiki_handler = scrapeIP.WikiAPIHandler(title=title, id=id)
     wiki_handler.get_revs()
 
     db = databaseHandler.Database()
@@ -26,11 +27,15 @@ def main():
     # Closes connection to database.
     db.destroy()
 
+    print("Added data to database.")
+
 
 if __name__ == "__main__":
-    main()
-    # if len(sys.argv) == 2:
-    #     url = sys.argv[1]
-    #     main(url)
-    # else:
-    #     print("Please pass a Wikipedia url as an argument.")
+    parser = argparse.ArgumentParser()
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument('-t', "--title", help="Title of the page.")
+    group.add_argument("-id", help="Page id of the page.")
+
+    args = parser.parse_args()
+
+    main(title=args.title, id=args.id)
