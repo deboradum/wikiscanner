@@ -12,6 +12,8 @@ from databaseHandler import Database
 # parse monthly wikipedia datadumps
 # Snellere versie in C#, C++ OID schrijven
 # Andere talen ondersteunend
+# IPAPI error handling
+# custom title fixen!
 
 IPV4REGEX = '^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$'
 IPV6REGEX = '(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))'
@@ -85,28 +87,3 @@ class PageRevs:
 
         return list(ips)
 
-
-def main():
-
-
-    db = Database()
-    print(db)
-    db.get_version()
-
-
-    # p = PageRevs()
-
-    # p.get_revs()
-    # print(p.anon_revs[0])
-    # print("")
-    # ips_info = getIPInfo.get_ip_info(p.get_ips())
-    # print(ips_info[0])
-
-
-if __name__ == "__main__":
-    main()
-    # if len(sys.argv) == 2:
-    #     url = sys.argv[1]
-    #     main(url)
-    # else:
-    #     print("Please pass a Wikipedia url as an argument.")
