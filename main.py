@@ -7,6 +7,8 @@ def main(title=None, id=None):
     wiki_handler = scrapeIP.WikiAPIHandler(title=title, id=id)
     wiki_handler.get_revs()
 
+    print(f"{format(wiki_handler.get_fraction_anon() * 100, '.2f')}% of revisions were made annonymously.")
+
     db = databaseHandler.Database()
     # Inserts ip infos to database.
     ips_info = getIPInfo.get_ips_info(wiki_handler.get_ips())

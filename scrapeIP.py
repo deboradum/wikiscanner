@@ -104,3 +104,7 @@ class WikiAPIHandler:
         ips = {dict["user"] for dict in self.anon_revs}
 
         return list(ips)
+
+    def get_fraction_anon(self):
+
+        return len(self.anon_revs) / self.total_revs
