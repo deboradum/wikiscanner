@@ -1,5 +1,6 @@
 import databaseHandler
 import scrapeIP
+import getIPInfo
 
 # TODO
 # data visualiseren met hoeveel procent van welke landen etc.
@@ -18,11 +19,13 @@ def main():
     p.get_revs()
 
     db = databaseHandler.Database()
-    db.insert_revision(p.anon_revs)
+    ips_info = getIPInfo.get_ips_info(p.get_ips())
+    db.insert_ip(ips_info)
 
-    # print("")
-    # ips_info = getIPInfo.get_ip_info(p.get_ips())
-    # print(ips_info[0])
+    # db.insert_revision(p.anon_revs)
+
+    db.destroy()
+
 
 
 if __name__ == "__main__":

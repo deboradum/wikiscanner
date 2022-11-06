@@ -31,13 +31,37 @@ class Database:
         for rev in revs:
             rev_id = rev.get("revid")
             parent_id = rev.get("parentid")
-            ip = rev.get("user")
+            ip_addr = rev.get("user")
             time = rev.get("timestamp")
             comment = rev.get("comment")
-            row = (rev_id, parent_id, ip, time, comment)
+            row = (rev_id, parent_id, ip_addr, time, comment)
             rows.append(row)
         records_list = ','.join(['%s'] * len(rows))
         query = "INSERT INTO revision VALUES {}".format(records_list)
 
         cursor.execute(query, rows)
         cursor.close()
+
+    def insert_ip(self, ips_info):
+        cursor = self.conn.cursor()
+        rows = []
+        for ip in ips_info:
+            ip_addr = ip.get("ip")
+            network = ip.get("network")
+            country = ip.get("country")
+            region = ip.get("region")
+            city = ip.get("city")
+            latitude = ip.get("latitude")
+            longitude = ip.get("longitude")
+            asn = ip.get("asn")
+            organization = ip.get("org")
+            row = (ip_addr, network, country, region, city, latitude, longitude, asn, organization)
+            rows.append(row)
+        records_list = ','.join(['%s'] * len(rows))
+        query = "INSERT INTO ip_info VALUES {}".format(records_list)
+
+        cursor.execute(query, rows)
+        self.conn.commit()
+        cursor.close()
+
+        print("inserted IPs.")

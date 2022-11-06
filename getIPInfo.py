@@ -1,7 +1,7 @@
 import requests
 
 # Returns a dictionary containg information about the IP address.
-def get_ip_info(ips):
+def get_ips_info(ips):
     s = requests.Session()
     ips_info = []
 
