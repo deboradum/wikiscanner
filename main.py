@@ -20,9 +20,9 @@ def main():
 
     db = databaseHandler.Database()
     ips_info = getIPInfo.get_ips_info(p.get_ips())
-    db.insert_ip(ips_info)
+    # db.insert_ip(ips_info)
 
-    # db.insert_revision(p.anon_revs)
+    db.insert_revision(p.anon_revs)
 
     db.destroy()
 

@@ -25,6 +25,24 @@ class Database:
         print("Connection established to: ",data)
         cursor.close()
 
+    def insert_tags(self, revs):
+        cursor = self.conn.cursor()
+        rows = []
+        for rev in revs:
+            rev_id = rev.get("revid")
+            tags = rev.get("tags")
+            for tag in tags:
+                row = (rev_id, tag)
+                rows.append(row)
+        records_list = ','.join(['%s'] * len(rows))
+        query = "INSERT INTO tags VALUES {} ON CONFLICT DO NOTHING".format(records_list)
+        try:
+            cursor.execute(query, rows)
+        except Exception as e:
+            print("Error inserting: ", e)
+        self.conn.commit()
+        cursor.close()
+
     def insert_revision(self, revs):
         cursor = self.conn.cursor()
         rows = []
@@ -34,13 +52,21 @@ class Database:
             ip_addr = rev.get("user")
             time = rev.get("timestamp")
             comment = rev.get("comment")
-            row = (rev_id, parent_id, ip_addr, time, comment)
+            page_id = rev.get("page_id")
+            page_title = rev.get("page_title")
+            row = (rev_id, parent_id, ip_addr, time, comment, page_title, page_id)
             rows.append(row)
         records_list = ','.join(['%s'] * len(rows))
-        query = "INSERT INTO revision VALUES {}".format(records_list)
+        query = "INSERT INTO revision VALUES {} ON CONFLICT DO NOTHING".format(records_list)
 
-        cursor.execute(query, rows)
+        try:
+            cursor.execute(query, rows)
+        except Exception as e:
+            print("Error inserting: ", e)
+        self.conn.commit()
         cursor.close()
+
+        self.insert_tags(revs)
 
     def insert_ip(self, ips_info):
         cursor = self.conn.cursor()
@@ -58,10 +84,11 @@ class Database:
             row = (ip_addr, network, country, region, city, latitude, longitude, asn, organization)
             rows.append(row)
         records_list = ','.join(['%s'] * len(rows))
-        query = "INSERT INTO ip_info VALUES {}".format(records_list)
+        query = "INSERT INTO ip_info VALUES {} ON CONFLICT DO NOTHING".format(records_list)
 
-        cursor.execute(query, rows)
+        try:
+            cursor.execute(query, rows)
+        except Exception as e:
+            print("Error inserting: ", e)
         self.conn.commit()
         cursor.close()
-
-        print("inserted IPs.")

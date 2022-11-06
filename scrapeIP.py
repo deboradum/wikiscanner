@@ -44,6 +44,8 @@ class PageRevs:
             matchipv6 = re.search(IPV6REGEX, rev["user"])
             if matchipv4 or matchipv6:
                 if rev not in self.anon_revs:
+                    rev["page_id"] = self.page_id
+                    rev["page_title"] = self.title
                     self.anon_revs.append(rev)
 
         # Gets continue value and calls function again if not all data is read.
