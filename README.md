@@ -13,4 +13,16 @@ The IP shown at a revision gives information about what network the edit came fr
 
 The tables needed for the database can be found in createDB.txt. A PostgreSQL database should be used for this.
 
-This project was inspired by Virgil Griffith's WikiScanner (https://en.wikipedia.org/wiki/WikiScanner).
+To run the code, use the following command:
+
+python main.py -t <title of wikipedia page>
+
+or
+
+python main.py -id <id of wikipedia page>
+
+This project was inspired by Virgil Griffith's WikiScanner (https://en.wikipedia.org/wiki/WikiScanner). All information this project brings to light is public information. Information is presented to enhance Wikipedia transparancy. No privacy laws are broken.
+
+Tables will look like as follows:
+![IP table](IPtable.png)
+![rev table](revtable.png)
