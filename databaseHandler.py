@@ -50,15 +50,16 @@ class Database:
         rows = []
         # Creates tuples that will be inserted in the database.
         for rev in revs:
-            rev_id = rev.get("revid")
-            parent_id = rev.get("parentid")
-            ip_addr = rev.get("user")
-            time = rev.get("timestamp")
-            comment = rev.get("comment")
-            page_id = rev.get("page_id")
-            page_title = rev.get("page_title")
-            row = (rev_id, parent_id, ip_addr, time, comment, page_title, page_id)
-            rows.append(row)
+            if rev:
+                rev_id = rev.get("revid")
+                parent_id = rev.get("parentid")
+                ip_addr = rev.get("user")
+                time = rev.get("timestamp")
+                comment = rev.get("comment")
+                page_id = rev.get("page_id")
+                page_title = rev.get("page_title")
+                row = (rev_id, parent_id, ip_addr, time, comment, page_title, page_id)
+                rows.append(row)
         records_list = ','.join(['%s'] * len(rows))
         # Creates query to insert all entries in the database.
         query = "INSERT INTO revision VALUES {} ON CONFLICT DO NOTHING".format(records_list)
@@ -80,17 +81,18 @@ class Database:
         rows = []
         # Creates tuples that will be inserted in the database.
         for ip in ips_info:
-            ip_addr = ip.get("ip")
-            network = ip.get("network")
-            country = ip.get("country_name")
-            region = ip.get("region")
-            city = ip.get("city")
-            latitude = ip.get("latitude")
-            longitude = ip.get("longitude")
-            asn = ip.get("asn")
-            organization = ip.get("org")
-            row = (ip_addr, network, country, region, city, latitude, longitude, asn, organization)
-            rows.append(row)
+            if ip:
+                ip_addr = ip.get("ip")
+                network = ip.get("network")
+                country = ip.get("country_name")
+                region = ip.get("region")
+                city = ip.get("city")
+                latitude = ip.get("latitude")
+                longitude = ip.get("longitude")
+                asn = ip.get("asn")
+                organization = ip.get("org")
+                row = (ip_addr, network, country, region, city, latitude, longitude, asn, organization)
+                rows.append(row)
         records_list = ','.join(['%s'] * len(rows))
         query = "INSERT INTO ip_info VALUES {} ON CONFLICT DO NOTHING".format(records_list)
         # Executes query.
