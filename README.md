@@ -23,6 +23,6 @@ python main.py -id <id of wikipedia page>
 
 This project was inspired by Virgil Griffith's WikiScanner (https://en.wikipedia.org/wiki/WikiScanner). All information this project brings to light is public information. Information is presented to enhance Wikipedia transparancy. No privacy laws are broken.
 
-Tables will look like as follows:
-![IP table](IPtable.png)
-![rev table](revtable.png)
+## Demo
+https://user-images.githubusercontent.com/88938032/221617253-23a1c6a5-bf66-4aa5-8259-6751cc1509c9.mp4
+
